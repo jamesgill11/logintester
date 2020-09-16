@@ -21,6 +21,9 @@ class Signup extends React.Component {
       .then(() => this.props.navigation.navigate("Profile"))
       .catch((error) => console.log(error));
   };
+  handleBackToLogin = () => {
+    this.props.navigation.navigate("Login");
+  };
 
   render() {
     return (
@@ -47,6 +50,12 @@ class Signup extends React.Component {
         />
         <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
           <Text style={styles.buttonText}>Signup</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={this.handleBackToLogin}
+        >
+          <Text style={styles.buttonText}>Back to Login!</Text>
         </TouchableOpacity>
       </View>
     );
