@@ -1,20 +1,25 @@
 import React from "react";
 import {
   View,
-  Text,
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Text,
 } from "react-native";
 import Firebase from "../config/Firebase";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { updateEmail, updatePassword, signup } from "../actions/user";
 
 class Signup extends React.Component {
+  state = {
+    name: "",
+    email: "",
+    password: "",
+  };
   handleSignUp = () => {
-    this.props.signup();
-    this.props.navigation.navigate("Profile");
+    const { email, password } = this.state;
+    Firebase.auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => this.props.navigation.navigate("Profile"))
+      .catch((error) => console.log(error));
   };
 
   render() {
@@ -22,15 +27,21 @@ class Signup extends React.Component {
       <View style={styles.container}>
         <TextInput
           style={styles.inputBox}
-          value={this.props.user.email}
-          onChangeText={(email) => this.props.updateEmail(email)}
+          value={this.state.name}
+          onChangeText={(name) => this.setState({ name })}
+          placeholder="Full Name"
+        />
+        <TextInput
+          style={styles.inputBox}
+          value={this.state.email}
+          onChangeText={(email) => this.setState({ email })}
           placeholder="Email"
           autoCapitalize="none"
         />
         <TextInput
           style={styles.inputBox}
-          value={this.props.user.password}
-          onChangeText={(password) => this.props.updatePassword(password)}
+          value={this.state.password}
+          onChangeText={(password) => this.setState({ password })}
           placeholder="Password"
           secureTextEntry={true}
         />
@@ -79,14 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ updateEmail, updatePassword, signup }, dispatch);
-};
-
-const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default Signup;
